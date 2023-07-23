@@ -1,0 +1,685 @@
+{
+	"info": {
+		"_postman_id": "3629aef6-e902-4df0-a556-558d53cc7fe7",
+		"name": "GrafQL Zero",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify if id, username and email properties are in response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"username\");\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"email\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.user.id).to.eq(\"1\")\r",
+							"    pm.expect(jsonData.data.user.username).to.eq(\"Bret\")\r",
+							"    pm.expect(jsonData.data.user.email).to.eq(\"Sincere@april.biz\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\r\n  user(id: 1) {\r\n    id\r\n    username\r\n    email\r\n    address {\r\n      geo {\r\n        lat\r\n        lng\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify if id, name properties are in response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.users.data[0]).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.users.data[0]).to.have.property(\"name\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify that 10 users exist\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.users.data).to.have.lengthOf(10)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query (\r\n  $options: PageQueryOptions\r\n) {\r\n  users(options: $options) {\r\n    data {\r\n      id\r\n      name\r\n    }\r\n    meta {\r\n      totalCount\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user wrong user ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify if id, username and email and address properties are in response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"username\");\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"email\");\r",
+							"    pm.expect(jsonData.data.user).to.have.property(\"address\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify that without valid ID we get Null in the response \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.user.id).to.eq(null)\r",
+							"    pm.expect(jsonData.data.user.username).to.eq(null)\r",
+							"    pm.expect(jsonData.data.user.email).to.eq(null)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\r\n  user(id: 23231) {\r\n    id\r\n    username\r\n    email\r\n    address {\r\n      geo {\r\n        lat\r\n        lng\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user without user ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that we get and error in the response \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.errors).to.exist\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query {\r\n  user(id: ) {\r\n    id\r\n    username\r\n    email\r\n    address {\r\n      geo {\r\n        lat\r\n        lng\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify if id, username and email properties are in response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.createUser).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.createUser).to.have.property(\"name\");\r",
+							"    pm.expect(jsonData.data.createUser).to.have.property(\"email\");\r",
+							"    pm.expect(jsonData.data.createUser).to.have.property(\"username\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.createUser.id).to.eq(\"11\")\r",
+							"    pm.expect(jsonData.data.createUser.name).to.eq(\"Igor\")\r",
+							"    pm.expect(jsonData.data.createUser.email).to.eq(\"igulabovskii@gmail.com\")\r",
+							"    pm.expect(jsonData.data.createUser.username).to.eq(\"Igor.g\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $input: CreateUserInput!\r\n) {\r\n  createUser(input: $input) {\r\n  id\r\n   name \r\n   email\r\n   username \r\n  }\r\n}",
+						"variables": "{\r\n  \"input\": {\r\n    \"name\": \"Igor\",\r\n    \"email\": \"igulabovskii@gmail.com\",\r\n    \"username\": \"Igor.g\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify if id, email properties are in response\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.updateUser).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.updateUser).to.have.property(\"email\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.updateUser.id).to.eq(\"1\")\r",
+							"    pm.expect(jsonData.data.updateUser.email).to.eq(\"test@test.com\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $id: ID!,\r\n  $input: UpdateUserInput!\r\n) {\r\n  updateUser(id: $id, input: $input) {\r\n    id\r\n    email\r\n  }\r\n}",
+						"variables": "{\r\n  \"id\": 1,\r\n  \"input\": {\r\n    \"email\": \"test@test.com\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that user is deleted\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data).to.have.property(\"deleteUser\")\r",
+							"    pm.expect(jsonData.data.deleteUser).to.eq(true)\r",
+							"    \r",
+							"    \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $id: ID!\r\n) {\r\n  deleteUser(id: $id)\r\n}",
+						"variables": "{\r\n  \"id\": 1\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Album",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that Album has id,tiel and userId properties\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.photo.album).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.photo.album).to.have.property(\"title\");\r",
+							"    pm.expect(jsonData.data.photo.album).to.have.property(\"user\");\r",
+							"    pm.expect(jsonData.data.photo.album.user).to.have.property(\"id\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.photo.album.id).to.eq(\"1\")\r",
+							"    pm.expect(jsonData.data.photo.album.title).to.eq(\"quidem molestiae enim\")\r",
+							"    pm.expect(jsonData.data.photo.album.user.id).to.eq(\"1\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query (\r\n  $id: ID!\r\n) {\r\n  photo(id: $id) {\r\n    album {\r\n      id\r\n      title\r\n      user {\r\n        id\r\n      }\r\n    }\r\n  }\r\n}",
+						"variables": "{\r\n  \"id\": 2\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all albums",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that Album has id,title properties\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.albums.data[0]).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.albums.data[0]).to.have.property(\"title\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify that 100 Album exist for that user\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.albums.data).to.have.lengthOf(100)\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query (\r\n  $options: PageQueryOptions\r\n) {\r\n  albums(options: $options) {\r\n    data {\r\n      id\r\n     title\r\n     \r\n    }\r\n    meta {\r\n      totalCount\r\n    }\r\n  }\r\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Album",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that CreateAlbum has id and title properties\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.createAlbum).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.createAlbum).to.have.property(\"title\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.createAlbum.id).to.eq(\"101\")\r",
+							"    pm.expect(jsonData.data.createAlbum.title).to.eq(\"Igor\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $input: CreateAlbumInput!\r\n) {\r\n  createAlbum(input: $input) {\r\n  id\r\n   title \r\n  }\r\n}",
+						"variables": "{\r\n  \"input\": {\r\n    \"title\": \"Igor\",\r\n    \"userId\": \"1\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Album",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that updateAlbum has id and title properties\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.updateAlbum).to.have.property(\"id\")\r",
+							"    pm.expect(jsonData.data.updateAlbum).to.have.property(\"title\");\r",
+							"    \r",
+							"});\r",
+							"pm.test(\"Verify if properties in the response have correct values \", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.updateAlbum.id).to.eq(\"1\")\r",
+							"    pm.expect(jsonData.data.updateAlbum.title).to.eq(\"Igor.\")\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $id: ID!,\r\n  $input: UpdateAlbumInput!\r\n) {\r\n  updateAlbum(id: $id, input: $input) {\r\n    id\r\n    title\r\n  }\r\n}",
+						"variables": "{\r\n  \"id\": 1,\r\n  \"input\": {\r\n    \"title\": \"Igor.\"\r\n  }\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Album",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 600ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(600);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify that album is deleted\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data).to.have.property(\"deleteAlbum\")\r",
+							"    pm.expect(jsonData.data.deleteAlbum).to.eq(true)\r",
+							"    \r",
+							"    \r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation (\r\n  $id: ID!\r\n) {\r\n  deleteAlbum(id: $id)\r\n}",
+						"variables": "{\r\n  \"id\": 1\r\n}"
+					}
+				},
+				"url": {
+					"raw": "https://graphqlzero.almansi.me/api",
+					"protocol": "https",
+					"host": [
+						"graphqlzero",
+						"almansi",
+						"me"
+					],
+					"path": [
+						"api"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
